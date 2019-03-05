@@ -5,11 +5,15 @@
   "author": "Treehouse Island, Inc.",
   "private": true,
   "scripts": {
-    "start": "node ./app"
+    "start": "nodemon ./app"
   },
   "dependencies": {
+    "bcrypt": "^3.0.4",
     "body-parser": "^1.13.3",
     "express": "^4.13.4",
+    "mongo": "^0.1.0",
+    "mongoose": "^5.4.17",
+    "nodemon": "^1.18.10",
     "pug": "^2.0.0-beta2"
   },
   "license": "MIT"
