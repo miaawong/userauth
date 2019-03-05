@@ -2,6 +2,22 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 
+// GET /login 
+router.get('/login', function (req, res, next) {
+  return res.render('login', { title: 'Log in' });
+});
+
+// POST /login 
+router.post('/login', function (req, res, next) {
+  if (req.body.password && req.body.password) {
+
+  } else {
+    var err = new Error('email and password are required');
+    err.status = next();
+    return next(err);
+  }
+});
+
 // GET /register 
 router.get('/register', function (req, res, next) {
   return res.render('register', { title: 'Sign Up' });

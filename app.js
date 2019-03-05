@@ -1,13 +1,20 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var session = require('express-session');
 var app = express();
 
+// use session for tracking logins 
+app.use(session({
+  secret: 'treehouse',
+  resave: true,
+  saveUninitialized: false
+}));
 // mongodb conn
 mongoose.connect("mongodb://localhost:27017/bookworm");
 var db = mongoose.connection;
 // mongo err 
-db.on('error', console.error.bind(console, 'connection not ok'));
+db.on('error', console.error.bind(console, 'connection error'));
 // parse incoming requests
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
