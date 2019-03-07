@@ -1,16 +1,52 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var mid = require('../middleware');
+
+// GET /profile 
+router.get('/profile', mid.requireLogin, (req, res, next) => {
+  User.findById(req.session.userId)
+    .exec((error, user) => {
+      if (error) {
+        return next(error);
+      } else {
+        return res.render('profile', { title: 'Profile', name: user.name, favorite: user.favoriteBook });
+      }
+    });
+});
+
+// GET /logout 
+router.get('/logout', (req, res, next) => {
+  if (req.session) {
+    // delete sesh object
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      } else {
+        return res.redirect('/');
+      }
+    });
+  }
+});
 
 // GET /login 
-router.get('/login', function (req, res, next) {
+router.get('/login', mid.loggedOut, function (req, res, next) {
   return res.render('login', { title: 'Log in' });
 });
 
 // POST /login 
 router.post('/login', function (req, res, next) {
   if (req.body.password && req.body.password) {
-
+    User.authenticate(req.body.email, req.body.password, (error, user) => {
+      if (error || !user) {
+        var err = new Error('Wrong email or password');
+        err.status = 401;
+        return next(err);
+      } else {
+        req.session.userId = user._id;
+        return res.redirect('/profile');
+      }
+    });
   } else {
     var err = new Error('email and password are required');
     err.status = next();
@@ -19,7 +55,7 @@ router.post('/login', function (req, res, next) {
 });
 
 // GET /register 
-router.get('/register', function (req, res, next) {
+router.get('/register', mid.loggedOut, function (req, res, next) {
   return res.render('register', { title: 'Sign Up' });
 });
 // POST / register 
@@ -51,6 +87,7 @@ router.post('/register', function (req, res, next) {
       if (error) {
         return next(error);
       } else {
+        req.session.userId = user._id;
         return res.redirect('/profile');
       }
     });
