@@ -14,7 +14,7 @@
     "express": "^4.13.4",
     "express-session": "^1.15.6",
     "mongo": "^0.1.0",
-    "mongoose": "^5.4.17",
+    "mongoose": "^5.7.5",
     "nodemon": "^1.18.10",
     "pug": "^2.0.0-beta2"
   },
